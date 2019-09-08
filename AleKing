@@ -1,0 +1,139 @@
+import java.util.Scanner;
+
+/**
+ *
+ * @author Citlalli
+ */
+public class Main {
+    public static void main(String[] args){
+        Scanner x=new Scanner(System.in);
+        Integer cantidad,elemento,opcion;
+        //System.out.println("cantidad: ");
+        cantidad=x.nextInt();
+       
+        Lista lista= new Lista();
+        for(int i=0;i<cantidad;i++){
+           // System.out.println("elemento: ");
+             //elemento=x.nextInt();
+             do{
+             //  System.out.println("elemento: ");
+             elemento=x.nextInt();  
+             }while(elemento<=0 || elemento>=1000000);
+             lista.insertarFinal(elemento);
+        }
+       //  System.out.println("opcion: ");
+         opcion=x.nextInt();
+        lista.casos(opcion);
+    //    lista.recorrer();
+             
+                
+    }
+}
+class Nodo{
+    int dato;
+    Nodo siguiente;
+     Nodo anterior;
+}
+class Lista{
+    Nodo inicio=null;
+         Nodo anterior=null;
+        Nodo fin=null;
+        
+     public  void recorrer(){
+            Nodo aux=inicio;
+            while(aux!=null){
+                System.out.print(" "+aux.dato);
+                aux=aux.siguiente;
+            }
+}
+     public   void insertarFinal(int dato){
+            Nodo nuevo = new Nodo();
+        nuevo.dato = dato;
+        nuevo.siguiente=null;
+        nuevo.anterior=null;
+       if(inicio==null){
+  inicio=nuevo;
+  fin=nuevo;
+}else{
+           fin.siguiente=nuevo;
+           nuevo.anterior=fin;
+           fin=nuevo;
+         }
+}
+     public  Boolean verificar(){
+        
+        Nodo nodoActual=inicio; //nodoActual se vuelve el inicio 
+        Nodo nodoSiguiente= null; //nodoSiguiente es null
+        Boolean v=null; //v es nulo
+        if(nodoActual==null){ //si el nodoActual es nulo
+            v=true; //esta ordenada
+           // System.out.println("No hay lista para ordenar");
+        }else{
+          while(nodoActual.siguiente!=null){ //la lista no esta vacía
+              nodoSiguiente=nodoActual.siguiente; //nodo actual en la parte de siguiente es el Nodosiguiente
+              if(nodoActual.dato<nodoSiguiente.dato){ //si el dato actual es mayor que el dato siguiento
+                  v=false; //la lista no está ordenada
+                  break;
+              }/*else{ //si el dato actual es menor que el dato siguiente
+                  v=true;//la lista esta ordenada
+              }*/ //vamos con el siguiente elemento de la lista
+              nodoActual=nodoActual.siguiente; //nodoActual en la parte de siguiente se convierte en el actual
+            }
+        }
+        if(v==null){
+            v=true;
+        }
+        return v; //retornar si es verdadero o falso
+    }
+     
+     public void casos(Integer opcion){
+         switch(opcion){
+             case 1: 
+                 Nodo auxiliar=fin;
+                 while(auxiliar!=null){
+                     System.out.print(" "+auxiliar.dato);
+                     auxiliar=auxiliar.anterior;
+                 }
+                 break;
+             case 2:
+                  Nodo aux=inicio;
+            while(aux!=null){
+                System.out.print(" "+aux.dato);
+                aux=aux.siguiente;
+                 }
+             break;
+             case 3:
+           Nodo aux1=inicio; //aux es el inicio
+        Integer aux2; //crear un aux2 para guardar el valor 
+        Nodo sig =null; //nuevo nodo siguiente
+       // sig=aux.siguiente;
+        if(verificar()){//si verificar es true
+            //System.out.println("Su lista esta ordenada"); 
+        }else{
+          while(!verificar()){ //si es false hay que ordenarla
+              aux1=inicio; //aux es igual a inicio
+              //sig=aux.siguiente;
+                while(aux1.siguiente!=null){ //mientras que aux en la parte de siguiente sea nulo
+                    sig=aux1.siguiente; //aux en la parte de siguiente es igual a sig 
+                    if(aux1.dato<sig.dato){
+                        aux2=aux1.dato; //aux2 guarda el valor de aux
+                        aux1.dato=sig.dato; //aux toma el valor de sig en el dato
+                        sig.dato=aux2; //siguiente en la parte de dato toma el valor de aux2
+                    }
+                    else{
+                        aux1=aux1.siguiente;//se recorre, ahora aux es aux en la parte de siguiente
+                       // sig=aux.siguiente;
+                    }
+                }
+            }
+        }
+         Nodo aux5=inicio;
+            while(aux5!=null){
+                System.out.print(" "+aux5.dato);
+                aux5=aux5.siguiente;}
+             break;
+     
+         }
+        
+     }
+}
