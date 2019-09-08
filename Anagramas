@@ -1,0 +1,215 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;;
+
+public class Main {
+    public static void main(String[]args) {
+    	Integer totalPalabras = null;
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+
+        while(totalPalabras == null) {
+            try {
+                totalPalabras = Integer.parseInt(in.readLine());
+            } catch (Exception e) {
+                totalPalabras = null;
+            }
+        }
+
+        String[] palabrasSeparadas = null;
+    
+        try {
+        	palabrasSeparadas = in.readLine().split("\\s+");
+        } catch (Exception e) {
+            palabrasSeparadas = null;
+        }
+
+        //Lista de lista, contiene las palabras separadar por caracteres
+        Lista<Lista<Character>> listaPalabras = new Lista<Lista<Character>>();
+        
+        for(int b = 0; b < palabrasSeparadas.length; b++) {
+            String palabraString = palabrasSeparadas[b];
+            Lista<Character> palabra = new Lista<Character>();
+            
+            for(int c = 0; c < palabraString.length(); c++) {
+                Character caracter = palabraString.charAt(c);
+
+                palabra.insertar(caracter);              
+            }
+
+            listaPalabras.insertar(palabra);
+        }
+
+        Lista<Lista<Character>> anagramas = new Lista<Lista<Character>>();
+
+        Nodo<Lista<Character>> nodo1 = null;
+        Nodo<Lista<Character>> nodo2 = listaPalabras.inicio;
+
+        for(int c = 0; c < listaPalabras.tamano(); c++) {
+            nodo1 = listaPalabras.seleccionar(c);
+            Lista<Character> anagrama = new Lista<Character>();
+        	
+        	anagrama.concatenar(nodo1.dato);
+        	
+        	for(int d = 0; d < listaPalabras.tamano(); d++) {
+            	nodo2 = listaPalabras.seleccionar(d);
+            	
+                if(c != d) {
+                    if(nodo1.dato.equals(nodo2.dato)) {
+                    	
+                    	anagrama.insertar(' ');
+                    	anagrama.concatenar(nodo2.dato);
+                    }
+                }
+            }
+        	
+            if(anagrama.tamano() > 0) {
+            	boolean exists = false;
+
+            	for(int f = 0; f < anagramas.tamano(); f++) {
+                	Lista<Character> anagramaAlmacenado = anagramas.seleccionar(f).dato;
+                	if(anagramaAlmacenado.equals(anagrama)) {
+                		exists = true;
+                		break;
+                	}
+                }
+            	
+            	if(!exists) 
+            		anagramas.insertar(anagrama);
+            }
+        }
+        
+        for(int f = 0; f < anagramas.tamano(); f++) {
+        	Lista<Character> anagrama = anagramas.seleccionar(f).dato;
+        	anagrama.imprimir();
+        	System.out.println("");
+        }
+    }
+
+  static class Lista <T>{
+      Nodo<T> inicio;
+
+      public void insertar(T dato) {
+          Nodo<T> newNodo = new Nodo<T>();
+          newNodo.dato = dato;
+
+          if(inicio == null) {
+              inicio = newNodo;
+          } else {
+              Nodo<T> nodoAux = inicio;
+              Nodo<T> nodoAnterior = null;
+
+              while(nodoAux != null) {
+                  nodoAnterior = nodoAux;
+                  nodoAux = nodoAux.siguiente;
+              }
+
+              nodoAnterior.siguiente = newNodo;
+          }
+      }
+     
+      public Nodo<T> seleccionar(int index) {
+          if(inicio == null) 
+              return null;
+
+          if(index >= tamano() || index < 0)
+              return null;
+
+          Nodo<T> nodoAux = inicio;
+          int c = 0;
+
+          while(nodoAux != null && c < index) {
+              c++;
+              nodoAux = nodoAux.siguiente;
+          }
+
+          return nodoAux;
+      }
+      
+      public void concatenar(Lista<T> listaConcatenar) {
+    	  Nodo<T> nodoConcatenar = listaConcatenar.inicio; 
+    	  
+    	  while(nodoConcatenar != null) {
+    		  insertar(nodoConcatenar.dato);
+    		  nodoConcatenar = nodoConcatenar.siguiente;
+    	  }
+      }
+
+      
+      public boolean equals(Lista<T> listaComparar) {
+          boolean sentencia = true;
+
+          if(inicio == null || listaComparar.inicio == null)
+              return false;
+
+          if(tamano() != listaComparar.tamano()) 
+              return false;
+          
+          for(int d = 0; d < listaComparar.tamano(); d++) {
+              Nodo<T> nodoComparar = listaComparar.seleccionar(d);
+              
+              if(!contiene(nodoComparar.dato)) {
+                  sentencia = false;
+                  break;
+              }
+          }   
+
+          return sentencia;
+      }
+
+      
+      public boolean contiene(T dato) {
+          if(inicio == null) 
+              return false;
+
+          if(inicio.dato == dato) 
+              return true;
+
+          boolean sentencia = false;
+          Nodo<T> nodoAux = inicio;        
+
+          while(nodoAux != null) {
+              if(nodoAux.dato == dato) {
+                  sentencia = true;
+                  break;
+              }
+
+              nodoAux = nodoAux.siguiente;  
+          }
+
+          return sentencia;
+      }
+
+      // retorna el tamaño de la lista
+      public int tamano() {
+          if(inicio == null) 
+              return 0;
+
+          int c = 0;
+
+          Nodo<T> nodoAux = inicio;
+
+          while(nodoAux != null) {
+              c++;
+              nodoAux = nodoAux.siguiente;
+          }
+
+          return c;
+      }
+
+      public void imprimir() {;
+          if(inicio != null) {
+              Nodo<T> nodoAux = inicio;
+
+              while(nodoAux != null) {
+                  System.out.print(nodoAux != null && nodoAux.dato == null ? "" : nodoAux.dato);
+                  nodoAux = nodoAux.siguiente;
+              }
+          }
+      }
+  }
+
+  static class Nodo <T> {
+      T dato;
+      Nodo<T> siguiente;
+  }
+}
